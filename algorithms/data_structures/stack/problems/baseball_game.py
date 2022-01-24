@@ -1,4 +1,4 @@
-# Link: https://leetcode.com/problems/next-greater-element-i/
+# Link: https://leetcode.com/problems/baseball-game/
 # Time: O(N)
 # Space: O(N)
 
