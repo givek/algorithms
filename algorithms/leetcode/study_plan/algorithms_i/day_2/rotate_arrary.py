@@ -3,7 +3,7 @@
 # Space: O(1)
 
 
-# Give array of numbers: [1, 2, 3, 4, 5] and k = 3
+# Given an array of numbers: [1, 2, 3, 4, 5] and k = 3
 
 # 1. reverse the entire array
 #   - [5, 4, 3, 2, 1]
