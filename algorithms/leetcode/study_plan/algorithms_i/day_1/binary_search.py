@@ -2,6 +2,7 @@
 # Time: O(LogN)
 # Space: O(1)
 
+
 def binary_search(nums, target):
     start, end = 0, len(nums) - 1
     while start <= end:
