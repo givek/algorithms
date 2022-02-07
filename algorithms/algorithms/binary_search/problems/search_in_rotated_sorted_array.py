@@ -1,5 +1,5 @@
 # Link: https://leetcode.com/problems/search-in-rotated-sorted-array/
-# Time: O(NLogN)
+# Time: O(LogN)
 # Space: O(1)
 
 

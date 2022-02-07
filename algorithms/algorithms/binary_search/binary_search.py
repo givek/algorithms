@@ -1,5 +1,5 @@
 # Binary Search Algorithm
-# Time: O(NLogN)
+# Time: O(LogN)
 # Space: O(1)
 
 
