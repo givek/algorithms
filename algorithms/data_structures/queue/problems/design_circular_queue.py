@@ -10,16 +10,14 @@ class CircularQueue:
 
     def enqueue(self, value: int) -> bool:
         if self.is_empty():  # As the queue is empty, front = rear = -1.
-            self.front = (
-                self.rear
-            ) = 0  # set front = rear = 0, as there will be only 1 element in the queue.
+            # set front = rear = 0, as there will be only 1 element in the queue.
+            self.front = self.rear = 0
             self.queue[self.rear] = value
             self.size += 1
             return True
 
-        if (
-            self.is_full()
-        ):  # As the queue is full we cannot add more elements to the queue.
+        if self.is_full():
+            # As the queue is full we cannot add more elements to the queue.
             return False
 
         # As this is a circular queue use the mod operator to find the next position to the element.
@@ -32,14 +30,12 @@ class CircularQueue:
         return True
 
     def dequeue(self) -> bool:
-        if (
-            self.is_empty()
-        ):  # As the queue is empty we cannot remove elements from the queue.
+        if self.is_empty():
+            # As the queue is empty we cannot remove elements from the queue.
             return False
 
-        if (
-            self.size == 1
-        ):  # As the queue contains only 1 element, after remove that element queue will be empty.
+        if self.size == 1:
+            # As the queue contains only 1 element, after remove that element queue will be empty.
             self.front = self.rear = -1  # So, set the front = rear = -1
             self.size -= 1
             return True
