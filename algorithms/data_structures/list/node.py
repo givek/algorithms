@@ -8,3 +8,14 @@ class Node:
 
     def __repr__(self):
         return str(self.val)
+
+
+from typing import List
+
+
+def create_list(node_vals: List[int]) -> Node:
+    head = temp = Node(node_vals.pop(0))
+    for val in node_vals:
+        temp.next = Node(val)
+        temp = temp.next
+    return head
