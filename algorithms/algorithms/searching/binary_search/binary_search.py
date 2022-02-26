@@ -12,6 +12,7 @@ def binary_search(sorted_list, start, end, target):
             return binary_search(sorted_list, mid + 1, end, target)
         else:
             return binary_search(sorted_list, start, mid - 1, target)
+    return -1
 
 
 def main():
