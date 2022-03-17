@@ -25,14 +25,14 @@ from algorithms.data_structures.list.node import Node, create_list
 # Now, we can swap the nodes and return pointer to the last node in the pair (4, in this case).
 
 
-# def swap_pairs(head: Node) -> Node:
-#     if not head or not head.next:
-#         return head
-#
-#     temp = head.next
-#     head.next = swap_pairs(head.next.next)
-#     temp.next = head
-#     return temp
+def swap_pairs(head: Node) -> Node:
+    if not head or not head.next:
+        return head
+
+    temp = head.next
+    head.next = swap_pairs(head.next.next)
+    temp.next = head
+    return temp
 
 
 def main():
