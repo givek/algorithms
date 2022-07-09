@@ -5,9 +5,15 @@ class AVLNode:
         self.left = left
         self.right = right
 
+    def __str__(self):
+        return str(self.val)
+
+    def __repr__(self):
+        return str(self.val)
+
 
 class AVL:
-    def __init__(self, val=None):
+    def __init__(self, val):
         self.root = AVLNode(val)
 
     @staticmethod
@@ -16,35 +22,35 @@ class AVL:
             return -1
         return node.height
 
-    def balance_factor(self, node: AVLNode):
-        if not node:
+    def balance_factor(self, root: AVLNode):
+        if not root:
             return 0
-        return self.height(node.left) - self.height(node.right)
+        return self.height(root.left) - self.height(root.right)
 
-    def left_rotation(self, node: AVLNode):
-        new_root = node.right
-        node.right = new_root.left
-        new_root.left = node
+    def left_rotate(self, root: AVLNode):
+        new_root = root.right
+        root.right = new_root.left
+        new_root.left = root
 
-        if node == self.root:
+        if root == self.root:
             self.root = new_root
 
-        node.height = 1 + max(self.height(node.left), self.height(node.right))
+        root.height = 1 + max(self.height(root.left), self.height(root.right))
         new_root.height = 1 + max(
             self.height(new_root.left), self.height(new_root.right)
         )
 
         return new_root
 
-    def right_rotation(self, node: AVLNode):
-        new_root = node.left
-        node.left = new_root.right
-        new_root.right = node
+    def right_rotate(self, root: AVLNode):
+        new_root = root.left
+        root.left = new_root.right
+        new_root.right = root
 
-        if node == self.root:
+        if root == self.root:
             self.root = new_root
 
-        node.height = 1 + max(self.height(node.left), self.height(node.right))
+        root.height = 1 + max(self.height(root.left), self.height(root.right))
         new_root.height = 1 + max(
             self.height(new_root.left), self.height(new_root.right)
         )
@@ -58,27 +64,36 @@ class AVL:
         if not root:
             return AVLNode(val)
 
-        elif root.val < val:
-            root.right = self.insert_node(root.right, val)
-        else:
+        if val < root.val:
             root.left = self.insert_node(root.left, val)
+        else:
+            root.right = self.insert_node(root.right, val)
+
+        if not root:
+            return root
 
         root.height = 1 + max(self.height(root.left), self.height(root.right))
 
         balance_factor = self.balance_factor(root)
 
-        if balance_factor > 1:
-            if self.balance_factor(root.left) == 1:
-                return self.right_rotation(root)
-            else:
-                root.left = self.left_rotation(root.left)
-                return self.right_rotation(root)
-        elif balance_factor < -1:
-            if self.balance_factor(root.right) == -1:
-                return self.left_rotation(root)
-            else:
-                root.right = self.right_rotation(root.right)
-                return self.left_rotation(root)
+        if balance_factor > 1:  # left heavy
+
+            if self.balance_factor(root.left) == 1:  # left-left imbalance
+                return self.right_rotate(root)
+            else:  # left-right imbalance
+                root.left = self.left_rotate(
+                    root.left
+                )  # update left subtree of root node.
+                return self.right_rotate(root)
+
+        if balance_factor < -1:
+            if self.balance_factor(root.right) == -1:  # right-right imbalance
+                return self.left_rotate(root)
+            else:  # right-left imbalance
+                root.right = self.right_rotate(
+                    root.right
+                )  # update right subtree of root node.
+                return self.left_rotate(root)
 
         return root
 
@@ -94,77 +109,52 @@ class AVL:
         elif val > root.val:
             root.right = self.remove_node(root.right, val)
         else:  # val == root.val
-
             if not root.left:
                 temp = root.right
                 root = None
                 return temp
 
-            elif not root.right:
+            if not root.right:
                 temp = root.left
                 root = None
                 return temp
 
-            temp = self.inorder_successor(root.right)
-            root.val = temp.val
-
-            root.right = self.remove_node(root.right, temp.val)
-
-        if not root:
-            return root
+            # if node has both left and right
+            right_min_val_node = self.min_value(root.right)
+            root.val = right_min_val_node.val
+            root.right = self.remove_node(root.right, right_min_val_node.val)
 
         root.height = 1 + max(self.height(root.left), self.height(root.right))
 
         balance_factor = self.balance_factor(root)
 
-        if balance_factor > 1:
-            if self.balance_factor(root.left) >= 0:
-                return self.right_rotation(root)
-            else:
-                root.left = self.left_rotation(root.left)
-                return self.right_rotation(root)
-        elif balance_factor < -1:
-            if self.balance_factor(root.right) <= 0:
-                return self.left_rotation(root)
-            else:
-                root.right = self.right_rotation(root.right)
-                return self.left_rotation(root)
+        if balance_factor > 1:  # left heavy
+
+            if self.balance_factor(root.left) >= 0:  # left-left imbalance
+                return self.right_rotate(root)
+            else:  # left-right imbalance
+                root.left = self.left_rotate(
+                    root.left
+                )  # update left subtree of root node.
+                return self.right_rotate(root)
+
+        if balance_factor < -1:
+            if self.balance_factor(root.right) <= 0:  # right-right imbalance
+                return self.left_rotate(root)
+            else:  # right-left imbalance
+                root.right = self.right_rotate(
+                    root.right
+                )  # update right subtree of root node.
+                return self.left_rotate(root)
 
         return root
 
-    def inorder_successor(self, root):
-        if not root or not root.right:
+    def min_value(self, root: AVLNode):
+        if not root or not root.left:
             return root
-        return self.inorder_successor(root.right)
+        return self.min_value(root.left)
 
-    def find_parent(self, root, node):
-        if root == node:
-            return None
-
-        if root.left == node or root.right == node:
-            return root
-
-        if root.val < node.val:
-            return self.find_parent(root.right, node)
-        else:
-            return self.find_parent(root.left, node)
-
-    def search(self, val):
-        return self.search_node(self.root, val)
-
-    def search_node(self, root, val):
-        if not root:
-            return None
-
-        if root.val == val:
-            return root
-
-        if root.val < val:
-            return self.search_node(root.right, val)
-        else:
-            return self.search_node(root.left, val)
-
-    def preorder_traversal(self, root):
+    def preorder_traversal(self, root: AVLNode):
         if root:
             print(root.val)
             self.preorder_traversal(root.left)
@@ -172,6 +162,19 @@ class AVL:
 
 
 def main():
+    # avl = AVL(20)
+    #
+    # avl.insert(4)
+    # avl.insert(26)
+    # avl.insert(3)
+    # avl.insert(9)
+    #
+    # avl.insert(15)
+    #
+    # avl.preorder_traversal(avl.root)
+    #
+    # print(avl.root, avl.root.left, avl.root.right)
+
     avl = AVL(2)
 
     avl.insert(1)
@@ -179,13 +182,9 @@ def main():
     avl.insert(3)
     avl.insert(5)
 
-    avl.preorder_traversal(avl.root)
-
     root = avl.remove(1)
 
-    print()
-    print(avl.root.val, root.val)
-    print()
+    avl.remove(4)
 
     avl.preorder_traversal(avl.root)
 
