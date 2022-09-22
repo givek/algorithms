@@ -1,21 +1,30 @@
+# Time: O(V + E)
+# Space: O(N)
+
+
 from algorithms.data_structures.graph.graph import Graph
 
 
 def dfs(graph):  # visit the entire graph
     visited = set()
+    parent = dict()
     for s in graph.vertices():
-        if s not in visited:
+        if s not in parent:
+            parent[s] = None
             visited.add(s)
-            dfs_visit(graph, visited, s)
+            dfs_visit(graph, visited, parent, s)
         print()
 
+    print(parent)
 
-def dfs_visit(graph, visited, s):
+
+def dfs_visit(graph, visited, parent, s):
     print(s)  # pre-order traversal
-    visited.add(s)
+    # visited.add(s)
     for w in graph.associated_vertices(s):
-        if w not in visited:
-            dfs_visit(graph, visited, w)
+        if w not in parent:
+            parent[w] = s
+            dfs_visit(graph, visited, parent, w)
     # print(s)  # post-order traversal
 
 
